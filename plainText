@@ -1,0 +1,40 @@
+#include "contiki.h"
+#include "sys/clock.h"
+#include "sys/energest.h"
+#include <stdio.h>
+
+PROCESS(plaintext_process, "Plaintext Metrics");
+AUTOSTART_PROCESSES(&plaintext_process);
+
+PROCESS_THREAD(plaintext_process, ev, data)
+{
+  static clock_time_t start_time, end_time;
+
+  PROCESS_BEGIN();
+
+  // Initialize energy tracking
+  energest_init();
+
+  // Start tracking time
+  start_time = clock_time();
+
+  // Simulate plaintext operation
+  printf("Performing plaintext operation...\n");
+
+  // Add your operation here (e.g., transmission, error handling)
+
+  // End tracking time
+  end_time = clock_time();
+
+  // Print time taken
+  printf("Plaintext Time (ticks): %lu\n", end_time - start_time);
+
+  // Print memory and energy usage
+  printf("Plaintext Energy CPU: %lu, LPM: %lu, Transmit: %lu, Listen: %lu\n",
+         energest_type_time(ENERGEST_TYPE_CPU),
+         energest_type_time(ENERGEST_TYPE_LPM),
+         energest_type_time(ENERGEST_TYPE_TRANSMIT),
+         energest_type_time(ENERGEST_TYPE_LISTEN));
+
+  PROCESS_END();
+}
